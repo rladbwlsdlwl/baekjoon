@@ -36,8 +36,6 @@ class Solution:
 
         return cnt
 
-
 s=Solution()
 s.fill_chess()
 print(s.min_drawing_cnt())
-
