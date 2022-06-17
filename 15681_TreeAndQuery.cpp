@@ -5,22 +5,20 @@
 using namespace std;
 
 vector<int>graph[MAX];
-bool visited[MAX];
-int dp[MAX];
+vector<bool>visited(MAX, false);
+vector<int>dp(MAX, 0);
 
-void dfs(int parent) {
-	int cnt = 1;
+int dfs(int parent) {
 	visited[parent] = true;
 
 	for (int i = 0; i < graph[parent].size(); i++) {
 		int child = graph[parent][i];
-		if (!visited[child]) {
-			dfs(child);
-			cnt += dp[child];
-		}
+		if (!visited[child])
+			dp[parent] += dfs(child);
 	}
-
-	dp[parent] = cnt;
+	dp[parent] += 1; // add myself
+	
+	return dp[parent];
 }
 
 int main() {
@@ -32,24 +30,22 @@ int main() {
 	int N, R, Q;
 	cin >> N >> R >> Q;
 
-	for (int i = 0; i < N - 1; i++) {
-		int n1, n2;
-		cin >> n1 >> n2;
-		graph[n1].push_back(n2);
-		graph[n2].push_back(n1);
+	while (--N) {
+		int node1, node2;
+		cin >> node1 >> node2;
+		
+		graph[node1].push_back(node2);
+		graph[node2].push_back(node1);
 	}
 
-	fill_n(visited, MAX, false);
-
-	
 	dfs(R);
 
-	for (int i = 0; i < Q; i++) {
-		int q;
-		cin >> q;
-		cout << dp[q] << "\n";
+	while (Q--) {
+		int n;
+		cin >> n;
+
+		cout << dp[n] << "\n";
 	}
 
-	
 	return 0;
 }
